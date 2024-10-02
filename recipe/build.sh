@@ -35,13 +35,14 @@ if [ -n "$CYGWIN_PREFIX" ] ; then
         --force
         --install
         -I "$mprefix/share/aclocal"
-        -I "$BUILD_PREFIX_M/Library/mingw-w64/share/aclocal"
+        -I "$BUILD_PREFIX_M/Library/usr/share/aclocal"
     )
     autoreconf "${autoreconf_args[@]}"
 
     # And we need to add the search path that lets libtool find the
     # msys2 stub libraries for ws2_32.
-    platlibs=$(cd $(dirname $(gcc --print-prog-name=ld))/../lib && pwd -W)
+    platlibs=$(cd $(dirname $($CC --print-prog-name=ld))/../sysroot/usr/lib && pwd -W)
+    test -f $platlibs/libws2_32.a || { echo "error locating libws2_32" ; exit 1 ; }
     export LDFLAGS="$LDFLAGS -L$platlibs"
 fi
 
