@@ -2,8 +2,8 @@
 {% set xorg_name = "lib" ~ xorg_ident %}
 {% set xorg_category = "lib" %}
 {% set name = "xorg-" ~ xorg_name %}
-{% set version = "1.2.3" %}
-{% set sha256 = "f917075a1b7b5a38d67a8b0238eaab14acd2557679835b154cf2bca576e89bf8" %}
+{% set version = "1.2.4" %}
+{% set sha256 = "75cd2859f38e207a090cac980d76bc71e9da99d48d09703584e00585abc920fe" %}
 {% set am_version = "1.15" %} # keep synchronized with build.sh
 
 package:
@@ -11,12 +11,11 @@ package:
   version: {{ version }}
 
 source:
-  fn: {{ name }}-{{ version }}.tar.bz2
-  url: https://www.x.org/releases/individual/{{ xorg_category }}/{{ xorg_name }}-{{ version }}.tar.bz2
+  url: https://www.x.org/releases/individual/{{ xorg_category }}/{{ xorg_name }}-{{ version }}.tar.xz
   sha256: {{ sha256 }}
 
 build:
-  number: 2
+  number: 0
   detect_binary_files_with_prefix: true
 
 requirements:
