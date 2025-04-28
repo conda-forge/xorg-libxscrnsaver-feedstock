@@ -1,4 +1,6 @@
 #! /bin/bash
+# Get an updated config.sub and config.guess
+cp $BUILD_PREFIX/share/gnuconfig/config.* .
 
 set -e
 
@@ -48,9 +50,15 @@ configure_args=(
     --disable-silent-rules
 )
 
-./configure "${configure_args[@]}"
+if [[ ${target_platform} == "osx-arm64" && "${CONDA_BUILD_CROSS_COMPILATION:-}" == "1" ]]; then
+    configure_args+=(--enable-malloc0returnsnull=no)
+fi
+
+./configure "${configure_args[@]}" || (cat config.log && exit 1)
 make -j$CPU_COUNT
 make install
+if [[ "${CONDA_BUILD_CROSS_COMPILATION:-}" != "1" || "${CROSSCOMPILING_EMULATOR}" != "" ]]; then
 make check
+fi
 
 rm -rf $uprefix/share/man $uprefix/share/doc/${PKG_NAME#xorg-}
