@@ -50,8 +50,13 @@ configure_args=(
     --disable-silent-rules
 )
 
-if [[ ${target_platform} == "osx-arm64" && "${CONDA_BUILD_CROSS_COMPILATION:-}" == "1" ]]; then
-    configure_args+=(--enable-malloc0returnsnull=no)
+if [[  "${CONDA_BUILD_CROSS_COMPILATION:-}" == "1" ]]; then
+    if [[ "${target_platform}" == osx-* ]]; then
+        configure_args+=(--enable-malloc0returnsnull=no)
+    else
+        # linux
+        configure_args+=(--enable-malloc0returnsnull=yes)
+    fi
 fi
 
 ./configure "${configure_args[@]}" || (cat config.log && exit 1)
